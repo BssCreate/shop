@@ -32,7 +32,37 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-    <script>        
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+        let checkTelegramWebApp = setInterval(function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                clearInterval(checkTelegramWebApp); // Останавливаем проверку
+    
+                // Скрываем анимацию загрузки
+                document.getElementById("loading").style.display = "none";
+                // Показываем профиль
+                document.getElementById("profile").style.display = "block";
+    
+                window.Telegram.WebApp.expand(); // Разворачиваем Web App
+    
+                let tg = window.Telegram.WebApp;
+                let user = tg.initDataUnsafe?.user;
+    
+                if (user) {
+                    document.getElementById("profile").innerHTML = `
+                        <h2>Ваш профиль</h2>
+                        <p><b>ID:</b> ${user.id}</p>
+                        <p><b>Ник:</b> ${user.first_name} ${user.last_name || ""}</p>
+                        ${user.username ? `<p><b>Юзер:</b> @${user.username}</p>` : ""}
+                    `;
+                } else {
+                    document.getElementById("profile").innerHTML = `<p>Ошибка: не удалось получить данные.</p>`;
+                }
+            }
+        }, 100); // Проверяем каждые 100 миллисекунд
+    });
+        
         function isTelegramWebApp() {
             return navigator.userAgent.includes("Telegram") || window.Telegram !== undefined;
         }
@@ -66,7 +96,7 @@
 
     <!-- Анимация загрузки -->
     <div class="loader-wrapper">
-        <div class="loader"></div>
+        <div class="loader" id="loading"></div>
     </div>
 
     <!-- Контейнер с профилем (изначально скрыт) -->
