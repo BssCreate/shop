@@ -33,13 +33,11 @@
         }
     </style>
     <script>
-        
-        window.Telegram.WebApp.expand(); // Разворачиваем Web App на весь экран
+       window.Telegram.WebApp.expand(); // Разворачиваем Web App
 
-        // Получаем данные пользователя
         let tg = window.Telegram.WebApp;
         let user = tg.initDataUnsafe?.user;
-    
+
         if (user) {
             document.getElementById("profile").innerHTML = `
                 <h2>Ваш профиль</h2>
@@ -48,16 +46,17 @@
                 ${user.username ? `<p><b>Юзер:</b> @${user.username}</p>` : ""}
             `;
 
+            // 📌 Отправляем данные на сервер
             fetch("/auth", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ initData: tg.initData })
             })
             .then(response => response.json())
-            .then(data => console.log("Ответ сервера:", data));
-            
+            .then(data => console.log("Ответ сервера:", data))
+            .catch(error => console.error("Ошибка запроса:", error));
         } else {
-            document.getElementById("profile").innerHTML = `<p>Ошибка: не удалось получить данные.</p>`;
+            document.getElementById("profile").innerHTML = "<p>Ошибка: не удалось получить данные.</p>";
         }
         
         function isTelegramWebApp() {
