@@ -6,7 +6,7 @@
     <title>Ваш профиль</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; padding: 20px; border-radius: 10px; background: #f5f5f5; display: none; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border-radius: 10px; background: #f5f5f5}
         h2 { color: #333; }
         .profile-info { margin-top: 15px; text-align: left; }
 
@@ -66,15 +66,35 @@
             window.location.href = `https://t.me/${botUsername}?start=openonlytelegram`;
         }
 
+        window.onload = function() {
+            setTimeout(() => { // Имитация загрузки 1.5 секунды
+                document.querySelector(".loader-wrapper").style.display = "none";
+
+                if (!isTelegramWebApp()) {
+                    redirectToTelegram();
+                } else {
+                    document.querySelector(".container").style.display = "block";
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const userId = urlParams.get('id'); // Попробуем получить параметр 'id' из URL
+
+                    if (userId) {
+                        document.getElementById("profile").innerHTML = `<p><strong>ID:</strong> ${userId}</p>`;
+                    } else {
+                        document.getElementById("profile").innerHTML = "<p>Ошибка: ID не найден</p>";
+                    }
+                }
+            }, 1500);
+        };
+
         
     </script>
 </head>
 <body>
 
-    <!-- Анимация загрузки -->
+    <!-- Анимация загрузки 
     <div class="loader-wrapper">
         <div class="loader"></div>
-    </div>
+    </div> -->
 
     <!-- Контейнер с профилем (изначально скрыт) -->
     <div class="container">
