@@ -6,7 +6,7 @@
     <title>Ваш профиль</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; padding: 20px; border-radius: 10px; background: #f5f5f5}
+        .container { max-width: 400px; margin: auto; padding: 20px; border-radius: 10px; background: #f5f5f5; display: none; }
         h2 { color: #333; }
         .profile-info { margin-top: 15px; text-align: left; }
 
@@ -36,12 +36,12 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Проверяем, доступен ли объект Telegram WebApp
             if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand(); // Разворачиваем Web App
-
+                window.Telegram.WebApp.expand(); // Разворачиваем WebApp
+        
                 // Получаем данные пользователя
                 let tg = window.Telegram.WebApp;
                 let user = tg.initDataUnsafe?.user;
-
+        
                 if (user) {
                     document.getElementById("profile").innerHTML = `
                         <h2>Ваш профиль</h2>
@@ -58,7 +58,7 @@
         });
 
         function isTelegramWebApp() {
-            return navigator.userAgent.includes("Telegram") || window.Telegram !== undefined;
+            return window.Telegram !== undefined;
         }
 
         function redirectToTelegram() {
@@ -71,30 +71,20 @@
                 document.querySelector(".loader-wrapper").style.display = "none";
 
                 if (!isTelegramWebApp()) {
-                    redirectToTelegram();
+                    redirectToTelegram();  // Перенаправление на Telegram
                 } else {
                     document.querySelector(".container").style.display = "block";
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const userId = urlParams.get('id'); // Попробуем получить параметр 'id' из URL
-
-                    if (userId) {
-                        document.getElementById("profile").innerHTML = `<p><strong>ID:</strong> ${userId}</p>`;
-                    } else {
-                        document.getElementById("profile").innerHTML = "<p>Ошибка: ID не найден</p>";
-                    }
                 }
             }, 1500);
         };
-
-        
     </script>
 </head>
 <body>
 
-    <!-- Анимация загрузки 
+    <!-- Анимация загрузки -->
     <div class="loader-wrapper">
         <div class="loader"></div>
-    </div> -->
+    </div>
 
     <!-- Контейнер с профилем (изначально скрыт) -->
     <div class="container">
