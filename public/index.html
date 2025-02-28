@@ -37,11 +37,11 @@
             // Проверяем, доступен ли объект Telegram WebApp
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.expand(); // Разворачиваем WebApp
-        
+
                 // Получаем данные пользователя
                 let tg = window.Telegram.WebApp;
                 let user = tg.initDataUnsafe?.user;
-        
+
                 if (user) {
                     document.getElementById("profile").innerHTML = `
                         <h2>Ваш профиль</h2>
