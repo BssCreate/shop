@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Обработчик главной страницы
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "public", "home.html"));
 });
 
 // Запуск сервера
