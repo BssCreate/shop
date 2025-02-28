@@ -10,14 +10,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-fetch("/auth", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ initData: tg.initData })
-})
-.then(response => response.json())
-.then(data => console.log("Ответ сервера:", data));
-
 app.post("/auth", (req, res) => {
     const initData = req.body.initData;
     console.log("Данные от Telegram:", initData);
