@@ -46,15 +46,6 @@
                 ${user.username ? `<p><b>Юзер:</b> @${user.username}</p>` : ""}
             `;
 
-            // 📌 Отправляем данные на сервер
-            fetch("/auth", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ initData: tg.initData })
-            })
-            .then(response => response.json())
-            .then(data => console.log("Ответ сервера:", data))
-            .catch(error => console.error("Ошибка запроса:", error));
         } else {
             document.getElementById("profile").innerHTML = "<p>Ошибка: не удалось получить данные.</p>";
         }
