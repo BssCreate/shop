@@ -10,6 +10,14 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+fetch("/auth", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ initData: tg.initData })
+})
+.then(response => response.json())
+.then(data => console.log("Ответ сервера:", data));
+
 // Обработчик 404 (если страница не найдена)
 app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
