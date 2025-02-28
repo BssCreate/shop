@@ -33,16 +33,15 @@
         }
     </style>
     <script>
-
         document.addEventListener("DOMContentLoaded", function() {
             // Проверяем, доступен ли объект Telegram WebApp
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.expand(); // Разворачиваем Web App
-        
+
                 // Получаем данные пользователя
                 let tg = window.Telegram.WebApp;
                 let user = tg.initDataUnsafe?.user;
-        
+
                 if (user) {
                     document.getElementById("profile").innerHTML = `
                         <h2>Ваш профиль</h2>
@@ -58,7 +57,6 @@
             }
         });
 
-        
         function isTelegramWebApp() {
             return navigator.userAgent.includes("Telegram") || window.Telegram !== undefined;
         }
@@ -77,7 +75,8 @@
                 } else {
                     document.querySelector(".container").style.display = "block";
                     const urlParams = new URLSearchParams(window.location.search);
-                    const userId = urlParams.get('id');
+                    const userId = urlParams.get('id'); // Попробуем получить параметр 'id' из URL
+
                     if (userId) {
                         document.getElementById("profile").innerHTML = `<p><strong>ID:</strong> ${userId}</p>`;
                     } else {
