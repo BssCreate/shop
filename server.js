@@ -18,6 +18,13 @@ fetch("/auth", {
 .then(response => response.json())
 .then(data => console.log("Ответ сервера:", data));
 
+app.post("/auth", (req, res) => {
+    const initData = req.body.initData;
+    console.log("Данные от Telegram:", initData);
+
+    res.json({ status: "ok", userId: "получено из initData" });
+});
+
 // Обработчик 404 (если страница не найдена)
 app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
