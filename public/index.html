@@ -33,14 +33,6 @@
         }
     </style>
     <script>
-
-        fetch("/auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ initData: tg.initData })
-        })
-        .then(response => response.json())
-        .then(data => console.log("Ответ сервера:", data));
         
         window.Telegram.WebApp.expand(); // Разворачиваем Web App на весь экран
 
@@ -55,6 +47,15 @@
                 <p><b>Ник:</b> ${user.first_name} ${user.last_name || ""}</p>
                 ${user.username ? `<p><b>Юзер:</b> @${user.username}</p>` : ""}
             `;
+
+            fetch("/auth", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ initData: tg.initData })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Ответ сервера:", data));
+            
         } else {
             document.getElementById("profile").innerHTML = `<p>Ошибка: не удалось получить данные.</p>`;
         }
