@@ -1,10 +1,3 @@
-function logMessage(message) {
-    const logElement = document.getElementById("log");
-    if (logElement) {
-        logElement.innerText += message + "\n";
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     logMessage("Загрузка WebApp...");
     
@@ -21,7 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
         logMessage("WebApp инициализирован.");
         tg.expand(); // Разворачиваем WebApp на весь экран
 
-        // Симуляция загрузки данных
+        // Получаем данные пользователя из Telegram
+        const user = tg.initDataUnsafe.user;
+        if (user) {
+            logMessage(`Пользователь: ${user.first_name} ${user.last_name} (@${user.username})`);
+            document.getElementById("userData").innerHTML = `
+                <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ""}</p>
+                <p><strong>Username:</strong> @${user.username || "Нет"}</p>
+                <p><strong>ID:</strong> ${user.id}</p>
+            `;
+        } else {
+            logMessage("Ошибка: данные пользователя не получены.");
+            document.getElementById("userData").innerHTML = "<p>Не удалось загрузить данные профиля.</p>";
+        }
+
+        // Загрузка данных (например, с сервера)
         loadData().then(data => {
             logMessage("Данные загружены: " + JSON.stringify(data));
 
@@ -35,12 +42,3 @@ document.addEventListener("DOMContentLoaded", () => {
         logMessage("Ошибка: WebApp не инициализирован!");
     }
 });
-
-// Функция для загрузки данных
-async function loadData() {
-    const response = await fetch("https://myshoptg.vercel.app/api/user-data"); // Пример запроса на сервер
-    if (!response.ok) {
-        throw new Error('Ошибка загрузки данных с сервера');
-    }
-    return response.json(); // Возвращаем полученные данные
-}
