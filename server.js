@@ -1,16 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-
+const express = require('express');
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-app.use(cors());
-app.use(express.json());
-
-// Принимаем данные от клиента
-app.post("/api/user-data", (req, res) => {
-    console.log("Получены данные от Telegram:", req.body);
-    res.json({ status: "ok", received: req.body });
+// Пример API для получения данных
+app.get('/api/user-data', (req, res) => {
+    res.json({ message: "Данные успешно загружены!" });
 });
 
 // Обработчик 404
@@ -18,8 +12,10 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-app.use(express.static("public")); // Раздаём статику из папки "public"
 
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на http://localhost:${PORT}`);
+app.use(express.static('public'));
+
+app.listen(port, () => {
+    console.log(`Сервер работает на http://localhost:${port}`);
 });
+
