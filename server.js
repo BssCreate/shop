@@ -1,18 +1,20 @@
 const express = require("express");
-const path = require("path");
+const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// Раздача статических файлов (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
+app.use(express.json());
 
-// Обработчик главной страницы
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+// Принимаем данные от клиента
+app.post("/api/user-data", (req, res) => {
+    console.log("Получены данные от Telegram:", req.body);
+    res.json({ status: "ok", received: req.body });
 });
 
-// Запуск сервера
+app.use(express.static("public")); // Раздаём статику из папки "public"
+
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
