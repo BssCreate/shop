@@ -16,88 +16,12 @@
             padding: 20px;
         }
 
-        .request-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .request-item {
-            background: #1e2a38;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .request-item:hover {
-            background: #2a3b4d;
-        }
-
-        .status {
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .pending {
-            background: orange;
-            color: black;
-        }
-
-        .approved {
-            background: green;
-            color: white;
-        }
-
-        .nav-menu {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #1e2a38;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .nav-item {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-        }
-
-        .nav-item:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="/main.js"></script>
-
-<div class="container">
-    <h1>Заявки</h1>
-    <ul class="request-list">
-        <li class="request-item">
-            <span>Заявка №1</span>
-            <span class="status pending">На рассмотрении</span>
-        </li>
-        <li class="request-item">
-            <span>Заявка №2</span>
-            <span class="status approved">Принята</span>
-        </li>
-    </ul>
-</div>
-
-<div class="nav-menu">
-    <a href="#" class="nav-item">Главная</a>
-    <a href="#" class="nav-item">Заявки</a>
-    <a href="#" class="nav-item">Настройки</a>
-</div>
 
 </body>
 </html>
