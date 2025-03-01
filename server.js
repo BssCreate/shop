@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 // Пример API для получения данных
-app.get('/api/user-data', (req, res) => {
+app.get('https://myshoptg.vercel.app/api/user-data', (req, res) => {
     res.json({ message: "Данные успешно загружены!" });
 });
 
