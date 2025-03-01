@@ -20,9 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tg) {
         logMessage("WebApp инициализирован.");
         tg.expand(); // Разворачиваем WebApp на весь экран
+
+        // Скрываем меню загрузки после инициализации WebApp
+        document.getElementById("loading").style.display = "none";
+        // Показываем основной контент
+        document.getElementById("content").style.display = "block";
     } else {
         logMessage("Ошибка: WebApp не инициализирован!");
     }
-
-    document.getElementById("loading").style.display = "none";
 });
