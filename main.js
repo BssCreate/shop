@@ -1,18 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("Загрузка началась...");
+
     const tg = window.Telegram.WebApp;
 
-    // Проверка среды запуска
     if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+        console.error("Не в Telegram! Перенаправляем...");
         window.location.href = "https://t.me/Petition_jp_Bot?start=openonlytelegram";
         return;
     }
 
-    // Имитация загрузки (2 секунды)
+    console.log("Запущено внутри Telegram WebApp");
+    
+    // Имитация загрузки (2 сек.)
     setTimeout(() => {
         document.getElementById("loading").style.display = "none";
         document.getElementById("content").style.display = "block";
 
-        tg.expand(); // Разворачиваем WebApp
+        tg.expand();
 
         const userData = {
             id: tg.initDataUnsafe.user.id,
@@ -22,9 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
             lang: tg.initDataUnsafe.user.language_code || "Неизвестно",
         };
 
+        console.log("Данные пользователя:", userData);
+
         document.getElementById("user-data").innerText = JSON.stringify(userData, null, 2);
 
-        // Отправляем данные на сервер
         fetch("/api/user-data", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -32,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => console.log("Ответ сервера:", data))
-        .catch(error => console.error("Ошибка:", error));
+        .catch(error => console.error("Ошибка запроса:", error));
 
     }, 2000);
 });
