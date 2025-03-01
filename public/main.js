@@ -21,11 +21,26 @@ document.addEventListener("DOMContentLoaded", () => {
         logMessage("WebApp инициализирован.");
         tg.expand(); // Разворачиваем WebApp на весь экран
 
-        // Скрываем меню загрузки после инициализации WebApp
-        document.getElementById("loading").style.display = "none";
-        // Показываем основной контент
-        document.getElementById("content").style.display = "block";
+        // Симуляция загрузки данных
+        loadData().then(data => {
+            logMessage("Данные загружены: " + JSON.stringify(data));
+
+            // Скрываем меню загрузки и показываем основной контент
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("content").style.display = "block";
+        }).catch(error => {
+            logMessage("Ошибка при загрузке данных: " + error);
+        });
     } else {
         logMessage("Ошибка: WebApp не инициализирован!");
     }
 });
+
+// Функция для загрузки данных
+async function loadData() {
+    const response = await fetch("/api/user-data"); // Пример запроса на сервер
+    if (!response.ok) {
+        throw new Error('Ошибка загрузки данных с сервера');
+    }
+    return response.json(); // Возвращаем полученные данные
+}
