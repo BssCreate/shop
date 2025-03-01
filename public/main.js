@@ -1,16 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const tg = window.Telegram.WebApp;
+    const tg = window.Telegram?.WebApp;
     
     if (!tg) {
-        console.error("Ошибка: Telegram SDK не загружен!");
         document.body.innerHTML = "<h2>Ошибка: Telegram WebApp недоступен</h2>";
         return;
     }
 
     tg.expand(); // Разворачиваем WebApp
 
+    // Проверяем, есть ли initDataUnsafe
+    if (!tg.initData || !tg.initDataUnsafe) {
+        document.body.innerHTML = "<h2>Ошибка: initData не передан в WebApp</h2>";
+        return;
+    }
+
     // Получаем данные пользователя
-    const user = tg.initDataUnsafe?.user;
+    const user = tg.initDataUnsafe.user;
 
     if (user) {
         document.body.innerHTML = `
@@ -20,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>ID:</strong> ${user.id}</p>
         `;
     } else {
-        document.body.innerHTML = "<h2>Ошибка: данные пользователя не получены.</h2>";
+        document.body.innerHTML = `<h2>Ошибка: Telegram не передал данные пользователя.</h2>
+        <p>Попробуй открыть WebApp через команду бота.</p>`;
     }
 });
