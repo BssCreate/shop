@@ -13,6 +13,11 @@ app.post("/api/user-data", (req, res) => {
     res.json({ status: "ok", received: req.body });
 });
 
+// Обработчик 404
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
+});
+
 app.use(express.static("public")); // Раздаём статику из папки "public"
 
 app.listen(PORT, () => {
