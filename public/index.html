@@ -16,12 +16,67 @@
             padding: 20px;
         }
 
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: #1c2938;
+            padding: 10px 0;
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .bottom-nav button.active {
+            font-weight: bold;
+            border-bottom: 2px solid #007bff;
+        }
     </style>
 </head>
 <body>
+    <div class="container" id="content">
+        <!-- Контент по умолчанию -->
+        <h1>Товары</h1>
+        <p>Здесь отображаются товары.</p>
+    </div>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="/main.js"></script>
+    <div class="bottom-nav">
+        <button onclick="showContent('news')" id="btn-news">Новости</button>
+        <button onclick="showContent('products')" id="btn-products" class="active">Товары</button>
+        <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
+    </div>
 
+    <script>
+        function showContent(page) {
+            const content = document.getElementById('content');
+            const buttons = document.querySelectorAll('.bottom-nav button');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${page}`).classList.add('active');
+            
+            let html = '';
+            switch (page) {
+                case 'news':
+                    html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
+                    break;
+                case 'products':
+                    html = '<h1>Товары</h1><p>Здесь отображаются товары.</p>';
+                    break;
+                case 'profile':
+                    html = '<h1>Профиль</h1><p>Информация о пользователе.</p>';
+                    break;
+            }
+            content.innerHTML = html;
+        }
+    </script>
 </body>
 </html>
