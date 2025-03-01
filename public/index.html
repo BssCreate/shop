@@ -40,13 +40,25 @@
             font-weight: bold;
             border-bottom: 2px solid #007bff;
         }
+
+        .product {
+            border: 1px solid #333;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .discount {
+            color: #4caf50;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container" id="content">
         <!-- Контент по умолчанию -->
         <h1>Товары</h1>
-        <p>Здесь отображаются товары.</p>
+        <div id="product-list">Загрузка товаров...</div>
     </div>
 
     <div class="bottom-nav">
@@ -66,6 +78,7 @@
             }
             
             tg.expand();
+            fetchProducts();
         });
 
         function showContent(page) {
@@ -81,7 +94,8 @@
                     html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
                     break;
                 case 'products':
-                    html = '<h1>Товары</h1><p>Здесь отображаются товары.</p>';
+                    html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
+                    fetchProducts();
                     break;
                 case 'profile':
                     const tg = window.Telegram?.WebApp;
@@ -97,6 +111,49 @@
                     break;
             }
             content.innerHTML = html;
+        }
+
+        function fetchProducts() {
+            fetch('/items.json')
+                .then(response => response.json())
+                .then(products => {
+                    const productList = document.getElementById('product-list');
+                    productList.innerHTML = '';
+                    products.forEach(product => {
+                        const discount = product.discount_price < product.price ? 
+                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
+                        const productElement = document.createElement('div');
+                        productElement.className = 'product';
+                        productElement.innerHTML = `
+                            <img src="${product.image}" alt="${product.title}" width="100">
+                            <h2>${product.title}</h2>
+                            <p>${product.description}</p>
+                            <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                        `;
+                        productElement.onclick = () => showProductDetails(product);
+                        productList.appendChild(productElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки товаров:', error);
+                    document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
+                });
+        }
+
+        function showProductDetails(product) {
+            document.getElementById('content').innerHTML = `
+                <h1>${product.title}</h1>
+                <img src="${product.image}" alt="${product.title}" width="200">
+                <p>${product.description}</p>
+                <p><strong>Цена:</strong> ${product.discount_price} ₽ ${product.discount_price < product.price ? 
+                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : ''}</p>
+                <button onclick="buyProduct()">Купить</button>
+                <button onclick="showContent('products')">Назад</button>
+            `;
+        }
+
+        function buyProduct() {
+            alert("Функция покупки пока не реализована");
         }
     </script>
 </body>
