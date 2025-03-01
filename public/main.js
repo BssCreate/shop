@@ -1,3 +1,11 @@
+function logMessage(message) {
+    console.log(message);
+    const logElement = document.getElementById("log");
+    if (logElement) {
+        logElement.innerHTML += message + "<br>";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     logMessage("Загрузка WebApp...");
     
@@ -17,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Получаем данные пользователя из Telegram
         const user = tg.initDataUnsafe.user;
         if (user) {
-            logMessage(`Пользователь: ${user.first_name} ${user.last_name} (@${user.username})`);
+            logMessage(`Пользователь: ${user.first_name} ${user.last_name || ""} (@${user.username})`);
             document.getElementById("userData").innerHTML = `
                 <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ""}</p>
                 <p><strong>Username:</strong> @${user.username || "Нет"}</p>
