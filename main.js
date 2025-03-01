@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("user-data").innerText = JSON.stringify(userData, null, 2);
 
-        fetch("/api/user-data", {
+        fetch("https://myshoptg.vercel.app/api/user-data", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData),
