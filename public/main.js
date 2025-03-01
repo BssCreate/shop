@@ -1,15 +1,29 @@
+function logMessage(message) {
+    document.getElementById("log").innerText += message + "\n";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Загрузка началась...");
+    logMessage("Загрузка WebApp...");
+    
+    if (!window.Telegram) {
+        logMessage("Ошибка: window.Telegram НЕ найден!");
+        return;
+    }
 
+    logMessage("Telegram SDK загружен.");
+    
     const tg = window.Telegram.WebApp;
-
-    if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-        console.error("Не в Telegram! Перенаправляем...");
+    
+    if (!tg || !tg.initDataUnsafe) {
+        logMessage("Ошибка: WebApp НЕ запущен в Telegram! Перенаправление...");
         window.location.href = "https://t.me/Petition_jp_Bot?start=openonlytelegram";
         return;
     }
 
-    console.log("Запущено внутри Telegram WebApp");
+    logMessage("WebApp успешно запущен в Telegram!");
+    document.getElementById("loading").style.display = "none";
+});
+
     
     // Имитация загрузки (2 сек.)
     setTimeout(() => {
