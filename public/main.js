@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Функция для загрузки данных
 async function loadData() {
-    const response = await fetch("/api/user-data"); // Пример запроса на сервер
+    const response = await fetch("https://myshoptg.vercel.app/api/user-data"); // Пример запроса на сервер
     if (!response.ok) {
         throw new Error('Ошибка загрузки данных с сервера');
     }
