@@ -55,6 +55,8 @@
         <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="/main.js"></script>
     <script>
         function showContent(page) {
             const content = document.getElementById('content');
@@ -72,7 +74,11 @@
                     html = '<h1>Товары</h1><p>Здесь отображаются товары.</p>';
                     break;
                 case 'profile':
-                    html = '<h1>Профиль</h1><p>Информация о пользователе.</p>';
+                    const user = window.Telegram.WebApp.initDataUnsafe.user;
+                    html = `<h1>Профиль</h1>
+                            <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
+                            <p><strong>Username:</strong> ${user.username || 'Нет'}</p>
+                            <p><strong>ID:</strong> ${user.id}</p>`;
                     break;
             }
             content.innerHTML = html;
