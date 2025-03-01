@@ -1,0 +1,23 @@
+[
+    {
+        "image": "https://example.com/product1.jpg",
+        "title": "Смартфон X100",
+        "description": "Мощный смартфон с AMOLED-дисплеем.",
+        "price": 50000,
+        "discount_price": 45000
+    },
+    {
+        "image": "https://example.com/product2.jpg",
+        "title": "Ноутбук ProBook",
+        "description": "Игровой ноутбук с RTX 4060 и SSD 1TB.",
+        "price": 120000,
+        "discount_price": 115000
+    },
+    {
+        "image": "https://example.com/product3.jpg",
+        "title": "Наушники BassBoost",
+        "description": "Беспроводные наушники с шумоподавлением.",
+        "price": 10000,
+        "discount_price": 10000
+    }
+]
