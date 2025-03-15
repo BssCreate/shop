@@ -237,22 +237,21 @@
             }
             tg.expand();
         
-            // Проверяем хэш в URL
+            // Получаем хэш из URL
             const hash = window.location.hash;
-            if (hash) {
-                // Если есть хэш "#reviews", показываем отзывы
-                if (hash === "#reviews") {
-                    showContent('reviews');
-                }
-                // Добавьте дополнительные условия для других страниц, если нужно
+        
+            if (hash === "#reviews") {
+                showContent('reviews'); // Открываем отзывы
+            } else if (hash === "#news") {
+                showContent('news'); // Открываем новости
             } else {
-                // Если хэш не указан, показываем товары по умолчанию
-                showContent('products');
+                showContent('products'); // По умолчанию товары
             }
         
             fetchProducts();
             fetchReviews();
         });
+
 
         
         function showContent(page) {
