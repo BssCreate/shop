@@ -90,6 +90,9 @@
             text-decoration: none;
             position: relative;
             overflow: hidden;
+            border-radius: 22px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .telegram-button:hover {
@@ -107,6 +110,12 @@
             background-image: linear-gradient(270deg, rgba(100, 181, 239, 0) 48.44%, #64b5ef 75.52%, rgba(100, 181, 239, 0) 100%);
             background-repeat: no-repeat;
             animation: bg-move linear 5s infinite;
+            z-index: 0; /* Отправляем анимацию назад */
+        }
+
+        .telegram-button span {
+            position: relative;
+            z-index: 1; /* Текст будет выше анимации */
         }
 
        @-webkit-keyframes bg-move {
@@ -124,7 +133,10 @@
     <div class="message-container">
         <h1>Ошибка!</h1>
         <p>Сайт доступен только с Telegram</p>
-        <a href="https://t.me/JuniPit" class="telegram-button" target="_blank">Перейти в Telegram</a>
+        <a href="https://t.me/JuniPit" class="telegram-button" target="_blank">
+            <span>Перейти в Telegram</span>
+        </a>
+
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
