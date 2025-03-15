@@ -106,18 +106,15 @@
             height: 100%;
             background-image: linear-gradient(270deg, rgba(100, 181, 239, 0) 48.44%, #64b5ef 75.52%, rgba(100, 181, 239, 0) 100%);
             background-repeat: no-repeat;
-            animation: bg-move 5s linear infinite;
+            animation: bg-move 2s forwards; /* Увеличена скорость до 2 секунд */
         }
 
         @keyframes bg-move {
             0% {
                 left: -100%;
             }
-            50% {
-                left: 100%;
-            }
             100% {
-                left: -100%;
+                left: 100%;
             }
         }
     </style>
