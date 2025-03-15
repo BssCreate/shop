@@ -237,21 +237,24 @@
             }
             tg.expand();
         
-            // Загружаем данные (но пока не меняем контент)
+            // Загружаем данные, но не меняем контент
             fetchProducts();
             fetchReviews();
         
-            // Проверяем, есть ли хэш в URL
-            const hash = window.location.hash;
-        
-            if (hash === "#reviews") {
-                setTimeout(() => showContent('reviews'), 100); // Даем время на загрузку
-            } else if (hash === "#news") {
-                setTimeout(() => showContent('news'), 100);
-            } else {
-                setTimeout(() => showContent('products'), 100); // По умолчанию товары
+            // Проверяем хэш в URL и сразу отображаем нужный раздел
+            switch (window.location.hash) {
+                case "#reviews":
+                    showContent('reviews');
+                    break;
+                case "#news":
+                    showContent('news');
+                    break;
+                default:
+                    showContent('products'); // Только если нет хэша
+                    break;
             }
         });
+
 
 
 
