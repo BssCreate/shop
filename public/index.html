@@ -50,7 +50,7 @@
         }
 
         .discount {
-            color: #4caf50;
+            color: #4fd749;
             font-weight: bold;
         }
 
@@ -144,6 +144,71 @@
     background: #0056b3;
 }
 
+    .product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #1c2938;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.product-details img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.product-details h1 {
+    color: #4caf50;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.product-details p {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.product-details .price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff5252;
+}
+
+.product-details button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+}
+
+.product-details button:hover {
+    background: #0056b3;
+}
+
+/* Анимация плавного появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
     </style>
 </head>
@@ -228,15 +293,20 @@
 
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
-                <h1>${product.title}</h1>
-                <img src="${product.image}" alt="${product.title}" width="200">
-                <p>${product.description}</p>
-                <p><strong>Цена:</strong> ${product.discount_price} ₽ ${product.discount_price < product.price ? 
-                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : ''}</p>
-                <button onclick="buyProduct()">Купить</button>
-                <button onclick="showContent('products')">Назад</button>
+                <div class="product-details">
+                    <img src="${product.image}" alt="${product.title}">
+                    <h1>${product.title}</h1>
+                    <p>${product.description}</p>
+                    <p class="price"><strong>Цена:</strong> ${product.discount_price} ₽ 
+                        ${product.discount_price < product.price ? 
+                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` 
+                            : ''}</p>
+                    <button onclick="buyProduct()">Купить</button>
+                    <button onclick="showContent('products')">Назад</button>
+                </div>
             `;
         }
+
 
         function buyProduct() {
             alert("Функция покупки пока не реализована");
