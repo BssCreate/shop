@@ -237,25 +237,15 @@
             }
             tg.expand();
         
-            let contentSet = false; // Переменная для предотвращения двойного вызова
-        
             fetchProducts();
             fetchReviews();
         
-            if (window.location.hash) {
-                showContent(window.location.hash.substring(1));
-                contentSet = true;
-            }
-        
-            if (!contentSet) {
-                showContent('products');
-            }
+            // Проверяем хэш в URL
+            const page = window.location.hash ? window.location.hash.substring(1) : 'products';
+            
+            // Вызываем showContent ТОЛЬКО ОДИН раз
+            showContent(page);
         });
-
-        
-
-
-
 
         
         function showContent(page) {
