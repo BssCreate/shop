@@ -52,6 +52,94 @@
             color: #4caf50;
             font-weight: bold;
         }
+
+        .review-card {
+            background: #1c2938;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .review-card:hover {
+            transform: scale(1.02);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #64b5ef;
+        }
+
+        .review-header .username {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .review-text {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .review-cost {
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .review-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #1c93e3;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .review-link:hover {
+            background: #167bb5;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: #1c2938;
+            padding: 10px 0;
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .bottom-nav button.active {
+            font-weight: bold;
+            border-bottom: 2px solid #007bff;
+        }
     </style>
 </head>
 <body>
@@ -152,10 +240,31 @@
             fetch('/revie.json')
                 .then(response => response.json())
                 .then(reviews => {
-                    reviewsCache = reviews;
+                    const reviewList = document.getElementById('reviews-list');
+                    reviewList.innerHTML = '';
+
+                    reviews.forEach(review => {
+                        const reviewElement = document.createElement('div');
+                        reviewElement.className = 'review-card';
+                        reviewElement.innerHTML = `
+                            <div class="review-header">
+                                <img src="https://api.dicebear.com/7.x/identicon/svg?seed=${review.User_ID}" alt="User Avatar">
+                                <div>
+                                    <div class="username">@User_${review.User_ID}</div>
+                                    <div class="review-date">${review.Date}</div>
+                                </div>
+                            </div>
+                            <h2>${review.Name_prod}</h2>
+                            <p class="review-text">"${review.revie_text}"</p>
+                            <p class="review-cost">Цена покупки: ${review.cost} ₽</p>
+                            <a href="${review.link}" class="review-link" target="_blank">Читать в Telegram</a>
+                        `;
+                        reviewList.appendChild(reviewElement);
+                    });
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки отзывов:', error);
+                    document.getElementById('reviews-list').innerHTML = 'Ошибка загрузки отзывов';
                 });
         }
 
