@@ -1,5 +1,5 @@
 export default function handler(req, res) {
     res.status(200).json({
-        allowBrowser: false
+        allowBrowser: true
     });
 }
