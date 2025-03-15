@@ -3,19 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JuniPit Shop</title>
+    <title>Telegram WebApp</title>
     <style>
-        /* Твой стиль остаётся без изменений */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #0e1824;
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
         }
 
         .container {
@@ -130,21 +124,37 @@
     </style>
 </head>
 <body>
+    <script src="config.js"></script> <!-- Подключение конфигурации -->
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!window.CONFIG.allowBrowser && !window.Telegram?.WebApp) {
+                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+                return;
+            }
 
-    <!-- Оставляем только контент страницы -->
-    <div class="container">
-        <h1>Добро пожаловать в JuniPit Shop!</h1>
-        <p>Вы можете просматривать товары и заказывать их.</p>
-        <div class="bottom-nav">
-            <button id="btn-products" onclick="showContent('products')" class="active">Товары</button>
-            <button id="btn-news" onclick="showContent('news')">Новости</button>
-            <button id="btn-profile" onclick="showContent('profile')">Профиль</button>
-        </div>
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
+
+            fetchProducts(); // Загружаем товары при загрузке страницы
+        });
+    </script>
+
+    <div class="container" id="content">
+        <h1>Товары</h1>
+        <div id="product-list">Загрузка товаров...</div>
+    </div>
+
+    <div class="bottom-nav">
+        <button onclick="showContent('news')" id="btn-news">Новости</button>
+        <button onclick="showContent('products')" id="btn-products" class="active">Товары</button>
+        <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let productsCache = []; // Кэш товаров
+        
+        let productsCache = [];
 
         function startAnimation() {
             const button = document.querySelector('.telegram-button');
@@ -179,15 +189,16 @@
                 case 'products':
                     html = '<h1>Товары</h1><div id="product-list"></div>';
                     content.innerHTML = html;
-                    renderProducts();
+                    renderProducts(); // Рендерим загруженные товары
                     return;
                 case 'profile':
-                    const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+                    const tg = window.Telegram?.WebApp;
+                    const user = tg?.initDataUnsafe?.user;
                     html = user ? `<h1>Профиль</h1>
                                    <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
                                    <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                   <p><strong>ID:</strong> ${user.id}</p>` : 
-                                   '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
+                                   <p><strong>ID:</strong> ${user.id}</p>`
+                                : '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
                     break;
             }
             content.innerHTML = html;
@@ -197,7 +208,7 @@
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    productsCache = products;
+                    productsCache = products; // Кэшируем товары
                     renderProducts();
                 })
                 .catch(error => {
