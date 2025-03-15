@@ -188,26 +188,26 @@
                 });
         }
 
-        function startAnimation() {
-            const button = document.querySelector('.telegram-button');
+        // function startAnimation() {
+        //     const button = document.querySelector('.telegram-button');
 
-            // Добавляем класс с анимацией
-            button.classList.add('shine');
+        //     // Добавляем класс с анимацией
+        //     button.classList.add('shine');
 
-            // Повторяем анимацию через 5 секунд
-            setInterval(() => {
-                button.classList.remove('shine'); // Убираем анимацию
-                void button.offsetWidth; // Это необходимо для сброса анимации
-                button.classList.add('shine'); // Добавляем анимацию снова
-            }, 5000); // Повторяем каждые 5 секунд
-        }
+        //     // Повторяем анимацию через 5 секунд
+        //     setInterval(() => {
+        //         button.classList.remove('shine'); // Убираем анимацию
+        //         void button.offsetWidth; // Это необходимо для сброса анимации
+        //         button.classList.add('shine'); // Добавляем анимацию снова
+        //     }, 5000); // Повторяем каждые 5 секунд
+        // }
 
-        // Анимация для кнопки
-        document.styleSheets[0].insertRule(
-            .shine:before {
-                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
-            }
-        , 0);
+        // // Анимация для кнопки
+        // document.styleSheets[0].insertRule(
+        //     .shine:before {
+        //         animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
+        //     }
+        // , 0);
 
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
