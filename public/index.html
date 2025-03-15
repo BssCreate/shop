@@ -41,7 +41,7 @@
             border-bottom: 2px solid #007bff;
         }
 
-        .product {
+        .product, .review {
             border: 1px solid #333;
             padding: 10px;
             margin: 10px 0;
@@ -52,59 +52,10 @@
             color: #4caf50;
             font-weight: bold;
         }
-
-        .telegram-button {
-            background-color: #1c93e3; /* Новый цвет кнопки */
-            color: white;
-            border: none;
-            padding: 13px 24px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            border-radius: 22px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .telegram-button:hover {
-            background-color: #167bb5;
-        }
-
-        /* Анимация для кнопки */
-        .telegram-button:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 200%;
-            height: 100%;
-            background-image: linear-gradient(270deg, rgba(100, 181, 239, 0) 48.44%, #64b5ef 75.52%, rgba(100, 181, 239, 0) 100%);
-            background-repeat: no-repeat;
-            animation: bg-move linear 5s infinite;
-            z-index: 0; /* Отправляем анимацию назад */
-        }
-
-        .telegram-button span {
-            position: relative;
-            z-index: 1; /* Текст будет выше анимации */
-        }
-
-       @-webkit-keyframes bg-move {
-          0%   { background-position: -500px 0; }
-          100% { background-position: 1000px 0; }
-        }
-        @keyframes bg-move {
-          0%   { background-position: -500px 0; }
-          100% { background-position: 1000px 0; }
-        }
     </style>
 </head>
 <body>
     <div class="container" id="content">
-        <!-- Контент по умолчанию -->
         <h1>Товары</h1>
         <div id="product-list">Загрузка товаров...</div>
     </div>
@@ -112,75 +63,47 @@
     <div class="bottom-nav">
         <button onclick="showContent('news')" id="btn-news">Новости</button>
         <button onclick="showContent('products')" id="btn-products" class="active">Товары</button>
-        <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
+        <button onclick="showContent('reviews')" id="btn-reviews">Отзывы</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        let productsCache = [];
+        let reviewsCache = [];
+
         document.addEventListener("DOMContentLoaded", () => {
             const tg = window.Telegram?.WebApp;
-
             if (!tg) {
                 console.error("Ошибка: Telegram SDK не загружен!");
                 return;
             }
-            
             tg.expand();
             fetchProducts();
+            fetchReviews();
         });
 
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
-            
+
             buttons.forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${page}`).classList.add('active');
-            
-            let html = '';
-            switch (page) {
-                case 'news':
-                    html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
-                    break;
-                case 'products':
-                    html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
-                    fetchProducts();
-                    break;
-                case 'profile':
-                    const tg = window.Telegram?.WebApp;
-                    const user = tg?.initDataUnsafe?.user;
-                    if (user) {
-                        html = `<h1>Профиль</h1>
-                                <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
-                                <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                <p><strong>ID:</strong> ${user.id}</p>`;
-                    } else {
-                        html = '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
-                    }
-                    break;
+
+            if (page === 'news') {
+                content.innerHTML = '<h1>Новости</h1><p>Последние новости здесь.</p>';
+            } else if (page === 'products') {
+                renderProducts();
+            } else if (page === 'reviews') {
+                renderReviews();
             }
-            content.innerHTML = html;
         }
 
         function fetchProducts() {
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    const productList = document.getElementById('product-list');
-                    productList.innerHTML = '';
-                    products.forEach(product => {
-                        const discount = product.discount_price < product.price ? 
-                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
-                        const productElement = document.createElement('div');
-                        productElement.className = 'product';
-                        productElement.innerHTML = `
-                            <img src="${product.image}" alt="${product.title}" width="100">
-                            <h2>${product.title}</h2>
-                            <p>${product.description}</p>
-                            <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
-                        `;
-                        productElement.onclick = () => showProductDetails(product);
-                        productList.appendChild(productElement);
-                    });
+                    productsCache = products;
+                    renderProducts();
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки товаров:', error);
@@ -188,26 +111,26 @@
                 });
         }
 
-        // function startAnimation() {
-        //     const button = document.querySelector('.telegram-button');
+        function renderProducts() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<h1>Товары</h1><div id="product-list"></div>';
+            const productList = document.getElementById('product-list');
 
-        //     // Добавляем класс с анимацией
-        //     button.classList.add('shine');
-
-        //     // Повторяем анимацию через 5 секунд
-        //     setInterval(() => {
-        //         button.classList.remove('shine'); // Убираем анимацию
-        //         void button.offsetWidth; // Это необходимо для сброса анимации
-        //         button.classList.add('shine'); // Добавляем анимацию снова
-        //     }, 5000); // Повторяем каждые 5 секунд
-        // }
-
-        // // Анимация для кнопки
-        // document.styleSheets[0].insertRule(
-        //     .shine:before {
-        //         animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
-        //     }
-        // , 0);
+            productsCache.forEach(product => {
+                const discount = product.discount_price < product.price ? 
+                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}" width="100">
+                    <h2>${product.title}</h2>
+                    <p>${product.description}</p>
+                    <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                `;
+                productElement.onclick = () => showProductDetails(product);
+                productList.appendChild(productElement);
+            });
+        }
 
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
@@ -223,6 +146,36 @@
 
         function buyProduct() {
             alert("Функция покупки пока не реализована");
+        }
+
+        function fetchReviews() {
+            fetch('/revie.json')
+                .then(response => response.json())
+                .then(reviews => {
+                    reviewsCache = reviews;
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки отзывов:', error);
+                });
+        }
+
+        function renderReviews() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<h1>Отзывы</h1><div id="review-list"></div>';
+            const reviewList = document.getElementById('review-list');
+
+            reviewsCache.forEach(review => {
+                const reviewElement = document.createElement('div');
+                reviewElement.className = 'review';
+                reviewElement.innerHTML = `
+                    <h2>${review.Name_prod}</h2>
+                    <p><strong>Дата покупки:</strong> ${review.Date}</p>
+                    <p><strong>Стоимость:</strong> ${review.cost} ₽</p>
+                    <p>${review.revie_text}</p>
+                    <a href="${review.link}" target="_blank">Смотреть отзыв</a>
+                `;
+                reviewList.appendChild(reviewElement);
+            });
         }
     </script>
 </body>
