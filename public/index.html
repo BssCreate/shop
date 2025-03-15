@@ -89,6 +89,60 @@
 .review a:hover {
     text-decoration: underline;
 }
+        .product {
+    border-radius: 10px;
+    background: #1c2938;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+}
+
+.product:hover {
+    transform: scale(1.02);
+}
+
+.product img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #4caf50;
+}
+
+.product p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.product .discount {
+    color: #ff5252;
+    font-weight: bold;
+}
+
+.product button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.product button:hover {
+    background: #0056b3;
+}
+
 
     </style>
 </head>
@@ -160,10 +214,11 @@
                 const productElement = document.createElement('div');
                 productElement.className = 'product';
                 productElement.innerHTML = `
-                    <img src="${product.image}" alt="${product.title}" width="100">
+                    <img src="${product.image}" alt="${product.title}">
                     <h2>${product.title}</h2>
                     <p>${product.description}</p>
                     <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                    <button onclick="showProductDetails(${JSON.stringify(product)})">Подробнее</button>
                 `;
                 productElement.onclick = () => showProductDetails(product);
                 productList.appendChild(productElement);
