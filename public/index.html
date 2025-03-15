@@ -69,36 +69,35 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let config = { allowBrowser: false }; // Значение по умолчанию
         let productsCache = []; // Кэш товаров
 
-        async function loadConfig() {
+        document.addEventListener("DOMContentLoaded", async () => {
             try {
+                // Запрашиваем конфиг
                 const response = await fetch('/api/config');
                 if (!response.ok) throw new Error("Ошибка загрузки конфигурации");
-                config = await response.json();
-            } catch (error) {
-                console.error("Не удалось загрузить config.json:", error);
-            }
-            checkAccess();
-        }
+                const config = await response.json();
     
-        function checkAccess() {
-            if (!config.allowBrowser && !window.Telegram?.WebApp) {
-                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
-            } else {
+                // Проверяем доступ
+                if (!config.allowBrowser && !window.Telegram?.WebApp) {
+                    document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+                    return;
+                }
+    
+                // Инициализация приложения
                 initializeApp();
+            } catch (error) {
+                console.error("Ошибка загрузки конфигурации:", error);
+                document.body.innerHTML = "<h1>Ошибка загрузки конфигурации</h1>";
             }
-        }
+        });
     
         function initializeApp() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
             fetchProducts();
         }
-
-        document.addEventListener("DOMContentLoaded", loadConfig);
-
+        
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
