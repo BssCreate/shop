@@ -80,7 +80,7 @@
         }
 
         .telegram-button {
-            background-color: #0088cc;
+            background-color: #1c93e3; /* Новый цвет кнопки */
             color: white;
             border: none;
             padding: 12px 30px;
@@ -88,10 +88,40 @@
             font-size: 16px;
             cursor: pointer;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .telegram-button:hover {
-            background-color: #006c99;
+            background-color: #167bb5;
+        }
+
+        /* Анимация для кнопки */
+        .telegram-button:before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 200%;
+            height: 200%;
+            background-image: linear-gradient(270deg, rgba(100, 181, 239, 0) 48.44%, #64b5ef 75.52%, rgba(100, 181, 239, 0) 100%);
+            background-repeat: no-repeat;
+            animation: bg-move linear 5s infinite;
+        }
+
+        @keyframes bg-move {
+            0% {
+                top: -100%;
+                left: -100%;
+            }
+            50% {
+                top: 100%;
+                left: 100%;
+            }
+            100% {
+                top: -100%;
+                left: -100%;
+            }
         }
     </style>
 </head>
