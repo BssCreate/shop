@@ -240,13 +240,26 @@
             fetchReviews();
         });
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page'); // Читаем параметр 'page' из URL
+        
+            if (page) {
+                // Проверяем значение параметра и показываем нужный контент
+                showContent(page);
+            } else {
+                // Если параметр не передан, показываем страницу по умолчанию (например, товары)
+                showContent('products');
+            }
+        });
+        
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
-
+        
             buttons.forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${page}`).classList.add('active');
-
+        
             if (page === 'news') {
                 content.innerHTML = '<h1>Новости</h1><p>Последние новости здесь.</p>';
             } else if (page === 'products') {
@@ -255,6 +268,7 @@
                 renderReviews();
             }
         }
+
 
         function fetchProducts() {
             fetch('/items.json')
