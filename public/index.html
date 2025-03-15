@@ -104,6 +104,7 @@
 </head>
 <body>
     <div class="container" id="content">
+        <!-- Контент по умолчанию -->
         <h1>Товары</h1>
         <div id="product-list">Загрузка товаров...</div>
     </div>
@@ -118,7 +119,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tg = window.Telegram?.WebApp;
-            if (tg) tg.expand();
+
+            if (!tg) {
+                console.error("Ошибка: Telegram SDK не загружен!");
+                return;
+            }
+            
+            tg.expand();
             fetchProducts();
         });
 
@@ -154,27 +161,6 @@
             content.innerHTML = html;
         }
 
-        function startAnimation() {
-            const button = document.querySelector('.telegram-button');
-
-            // Добавляем класс с анимацией
-            button.classList.add('shine');
-
-            // Повторяем анимацию через 5 секунд
-            setInterval(() => {
-                button.classList.remove('shine'); // Убираем анимацию
-                void button.offsetWidth; // Это необходимо для сброса анимации
-                button.classList.add('shine'); // Добавляем анимацию снова
-            }, 5000); // Повторяем каждые 5 секунд
-        }
-
-        // Анимация для кнопки
-        document.styleSheets[0].insertRule(
-            .shine:before {
-                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
-            }
-        , 0);
-        
         function fetchProducts() {
             fetch('/items.json')
                 .then(response => response.json())
@@ -201,6 +187,27 @@
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
         }
+
+        function startAnimation() {
+            const button = document.querySelector('.telegram-button');
+
+            // Добавляем класс с анимацией
+            button.classList.add('shine');
+
+            // Повторяем анимацию через 5 секунд
+            setInterval(() => {
+                button.classList.remove('shine'); // Убираем анимацию
+                void button.offsetWidth; // Это необходимо для сброса анимации
+                button.classList.add('shine'); // Добавляем анимацию снова
+            }, 5000); // Повторяем каждые 5 секунд
+        }
+
+        // Анимация для кнопки
+        document.styleSheets[0].insertRule(
+            .shine:before {
+                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
+            }
+        , 0);
 
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
