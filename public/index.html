@@ -10,6 +10,11 @@
             font-family: Arial, sans-serif;
             background-color: #0e1824;
             color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
 
         .container {
@@ -53,8 +58,29 @@
             font-weight: bold;
         }
 
+        /* Стиль для сообщения */
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1c2938;
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        .message-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .message-container p {
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
         .telegram-button {
-            background-color: #1c93e3;
+            background-color: #1c93e3; /* Новый цвет кнопки */
             color: white;
             border: none;
             padding: 13px 24px;
@@ -100,38 +126,54 @@
           0%   { background-position: -500px 0; }
           100% { background-position: 1000px 0; }
         }
-
     </style>
 </head>
 <body>
-    <div class="container" id="content">
-        <!-- Контент по умолчанию -->
-        <h1>Товары</h1>
-        <div id="product-list">Загрузка товаров...</div>
-    </div>
 
-    <div class="bottom-nav">
-        <button onclick="showContent('news')" id="btn-news">Новости</button>
-        <button onclick="showContent('products')" id="btn-products" class="active">Товары</button>
-        <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
+    <div class="message-container">
+        <h1>Ошибка!</h1>
+        <p>Сайт доступен только с Telegram</p>
+        <a href="https://t.me/JuniPit" class="telegram-button" target="_blank">
+            <span>Перейти в Telegram</span>
+        </a>
+
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let productsLoaded = false; // Флаг, чтобы избежать повторной загрузки товаров
-        let productsData = []; // Переменная для хранения загруженных товаров
+        let productsCache = []; // Кэш товаров
 
         document.addEventListener("DOMContentLoaded", () => {
-            const tg = window.Telegram?.WebApp;
-
-            if (!tg) {
-                console.error("Ошибка: Telegram SDK не загружен!");
-                return;
-            }
-            
-            tg.expand();
-            fetchProducts(); // Загрузка товаров при первом заходе на сайт
+            // Убираем логику проверки на WebApp, теперь сайт всегда работает.
+            initializeApp();
         });
+
+        function initializeApp() {
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
+            fetchProducts();
+        }
+
+        function startAnimation() {
+            const button = document.querySelector('.telegram-button');
+
+            // Добавляем класс с анимацией
+            button.classList.add('shine');
+
+            // Повторяем анимацию через 5 секунд
+            setInterval(() => {
+                button.classList.remove('shine'); // Убираем анимацию
+                void button.offsetWidth; // Это необходимо для сброса анимации
+                button.classList.add('shine'); // Добавляем анимацию снова
+            }, 5000); // Повторяем каждые 5 секунд
+        }
+
+        // Анимация для кнопки
+        document.styleSheets[0].insertRule(`
+            .shine:before {
+                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
+            }
+        `, 0);
 
         function showContent(page) {
             const content = document.getElementById('content');
@@ -146,38 +188,28 @@
                     html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
                     break;
                 case 'products':
-                    html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
-                    if (!productsLoaded) { // Загружаем товары только если они еще не загружены
-                        fetchProducts();
-                    } else {
-                        renderProducts(); // Показываем уже загруженные товары
-                    }
-                    break;
+                    html = '<h1>Товары</h1><div id="product-list"></div>';
+                    content.innerHTML = html;
+                    renderProducts();
+                    return;
                 case 'profile':
-                    const tg = window.Telegram?.WebApp;
-                    const user = tg?.initDataUnsafe?.user;
-                    if (user) {
-                        html = `<h1>Профиль</h1>
-                                <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
-                                <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                <p><strong>ID:</strong> ${user.id}</p>`;
-                    } else {
-                        html = '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
-                    }
+                    const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+                    html = user ? `<h1>Профиль</h1>
+                                   <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
+                                   <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
+                                   <p><strong>ID:</strong> ${user.id}</p>` 
+                                : '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
                     break;
             }
             content.innerHTML = html;
         }
 
         function fetchProducts() {
-            if (productsLoaded) return; // Если товары уже были загружены, не загружаем их снова
-
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    productsData = products; // Сохраняем товары в переменную
-                    productsLoaded = true; // Устанавливаем флаг, что товары загружены
-                    renderProducts(); // Отображаем товары
+                    productsCache = products;
+                    renderProducts();
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки товаров:', error);
@@ -187,9 +219,10 @@
 
         function renderProducts() {
             const productList = document.getElementById('product-list');
-            productList.innerHTML = ''; // Очищаем список товаров
+            if (!productList) return;
 
-            productsData.forEach(product => {
+            productList.innerHTML = '';
+            productsCache.forEach(product => {
                 const discount = product.discount_price < product.price ? 
                     `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
                 const productElement = document.createElement('div');
