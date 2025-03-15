@@ -82,7 +82,7 @@
             }
             checkAccess();
         }
-
+    
         function checkAccess() {
             if (!config.allowBrowser && !window.Telegram?.WebApp) {
                 document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
@@ -90,7 +90,7 @@
                 initializeApp();
             }
         }
-
+    
         function initializeApp() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
