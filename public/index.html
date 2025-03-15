@@ -97,6 +97,8 @@
             fetchProducts();
         }
 
+        document.addEventListener("DOMContentLoaded", loadConfig);
+
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
