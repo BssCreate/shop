@@ -16,7 +16,7 @@ app.use((req, res) => {
 app.use(express.static(path.join(__dirname, "public")));
 
 // API для получения конфигурации
-app.get("/api/config", (req, res) => {
+app.get("api/config", (req, res) => {
     fs.readFile(path.join(__dirname, "config.json"), "utf8", (err, data) => {
         if (err) {
             console.error("Ошибка загрузки config.json:", err);
