@@ -236,22 +236,24 @@
                 return;
             }
             tg.expand();
+        
+            // Проверяем хэш в URL
+            const hash = window.location.hash;
+            if (hash) {
+                // Если есть хэш "#reviews", показываем отзывы
+                if (hash === "#reviews") {
+                    showContent('reviews');
+                }
+                // Добавьте дополнительные условия для других страниц, если нужно
+            } else {
+                // Если хэш не указан, показываем товары по умолчанию
+                showContent('products');
+            }
+        
             fetchProducts();
             fetchReviews();
         });
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const page = urlParams.get('page'); // Читаем параметр 'page' из URL
-        
-            if (page) {
-                // Проверяем значение параметра и показываем нужный контент
-                showContent(page);
-            } else {
-                // Если параметр не передан, показываем страницу по умолчанию (например, товары)
-                showContent('products');
-            }
-        });
         
         function showContent(page) {
             const content = document.getElementById('content');
