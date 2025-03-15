@@ -10,11 +10,6 @@
             font-family: Arial, sans-serif;
             background-color: #0e1824;
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
         }
 
         .container {
@@ -56,27 +51,6 @@
         .discount {
             color: #4caf50;
             font-weight: bold;
-        }
-
-        /* Стиль для товара */
-        .message-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #1c2938;
-            border-radius: 10px;
-            padding: 30px;
-        }
-
-        .message-container h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .message-container p {
-            margin-bottom: 30px;
-            font-size: 18px;
         }
 
         .telegram-button {
@@ -129,23 +103,55 @@
     </style>
 </head>
 <body>
+    <div class="container" id="content">
+        <h1>Товары</h1>
+        <div id="product-list">Загрузка товаров...</div>
+    </div>
 
-    <div id="content"></div>
+    <div class="bottom-nav">
+        <button onclick="showContent('news')" id="btn-news">Новости</button>
+        <button onclick="showContent('products')" id="btn-products" class="active">Товары</button>
+        <button onclick="showContent('profile')" id="btn-profile">Профиль</button>
+    </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let productsCache = []; // Кэш товаров
-
         document.addEventListener("DOMContentLoaded", () => {
-            // Загружаем товары сразу
-            initializeApp();
-        });
-
-        function initializeApp() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
             fetchProducts();
-            showContent(products);
+        });
+
+        function showContent(page) {
+            const content = document.getElementById('content');
+            const buttons = document.querySelectorAll('.bottom-nav button');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${page}`).classList.add('active');
+            
+            let html = '';
+            switch (page) {
+                case 'news':
+                    html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
+                    break;
+                case 'products':
+                    html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
+                    fetchProducts();
+                    break;
+                case 'profile':
+                    const tg = window.Telegram?.WebApp;
+                    const user = tg?.initDataUnsafe?.user;
+                    if (user) {
+                        html = `<h1>Профиль</h1>
+                                <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
+                                <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
+                                <p><strong>ID:</strong> ${user.id}</p>`;
+                    } else {
+                        html = '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
+                    }
+                    break;
+            }
+            content.innerHTML = html;
         }
 
         function startAnimation() {
@@ -163,73 +169,37 @@
         }
 
         // Анимация для кнопки
-        document.styleSheets[0].insertRule(`
+        document.styleSheets[0].insertRule(
             .shine:before {
                 animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
             }
-        `, 0);
-
-        function showContent(page) {
-            const content = document.getElementById('content');
-            const buttons = document.querySelectorAll('.bottom-nav button');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${page}`).classList.add('active');
-            
-            let html = '';
-            switch (page) {
-                case 'news':
-                    html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
-                    break;
-                case 'products':
-                    html = '<h1>Товары</h1><div id="product-list"></div>';
-                    content.innerHTML = html;
-                    renderProducts();
-                    return;
-                case 'profile':
-                    const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-                    html = user ? `<h1>Профиль</h1>
-                                   <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
-                                   <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                   <p><strong>ID:</strong> ${user.id}</p>` 
-                                : '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
-                    break;
-            }
-            content.innerHTML = html;
-        }
-
+        , 0);
+        
         function fetchProducts() {
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    productsCache = products;
-                    renderProducts();
+                    const productList = document.getElementById('product-list');
+                    productList.innerHTML = '';
+                    products.forEach(product => {
+                        const discount = product.discount_price < product.price ? 
+                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
+                        const productElement = document.createElement('div');
+                        productElement.className = 'product';
+                        productElement.innerHTML = `
+                            <img src="${product.image}" alt="${product.title}" width="100">
+                            <h2>${product.title}</h2>
+                            <p>${product.description}</p>
+                            <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                        `;
+                        productElement.onclick = () => showProductDetails(product);
+                        productList.appendChild(productElement);
+                    });
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки товаров:', error);
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
-        }
-
-        function renderProducts() {
-            const productList = document.getElementById('product-list');
-            if (!productList) return;
-
-            productList.innerHTML = '';
-            productsCache.forEach(product => {
-                const discount = product.discount_price < product.price ? 
-                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
-                const productElement = document.createElement('div');
-                productElement.className = 'product';
-                productElement.innerHTML = `
-                    <img src="${product.image}" alt="${product.title}" width="100">
-                    <h2>${product.title}</h2>
-                    <p>${product.description}</p>
-                    <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
-                `;
-                productElement.onclick = () => showProductDetails(product);
-                productList.appendChild(productElement);
-            });
         }
 
         function showProductDetails(product) {
