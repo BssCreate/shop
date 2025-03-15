@@ -270,22 +270,29 @@
 
         function renderReviews() {
             const content = document.getElementById('content');
-            content.innerHTML = '<h1>Отзывы</h1><div id="review-list"></div>';
+            content.innerHTML = '<h1>Отзывы</h1><div id="review-list"></div>'; // Правильный id
             const reviewList = document.getElementById('review-list');
-
+        
             reviewsCache.forEach(review => {
                 const reviewElement = document.createElement('div');
-                reviewElement.className = 'review';
+                reviewElement.className = 'review-card';
                 reviewElement.innerHTML = `
+                    <div class="review-header">
+                        <img src="https://api.dicebear.com/7.x/identicon/svg?seed=${review.User_ID}" alt="User Avatar">
+                        <div>
+                            <div class="username">@User_${review.User_ID}</div>
+                            <div class="review-date">${review.Date}</div>
+                        </div>
+                    </div>
                     <h2>${review.Name_prod}</h2>
-                    <p><strong>Дата покупки:</strong> ${review.Date}</p>
-                    <p><strong>Стоимость:</strong> ${review.cost} ₽</p>
-                    <p>${review.revie_text}</p>
-                    <a href="${review.link}" target="_blank">Смотреть отзыв</a>
+                    <p class="review-text">"${review.revie_text}"</p>
+                    <p class="review-cost">Цена покупки: ${review.cost} ₽</p>
+                    <a href="${review.link}" class="review-link" target="_blank">Читать в Telegram</a>
                 `;
                 reviewList.appendChild(reviewElement);
             });
         }
+
     </script>
 </body>
 </html>
