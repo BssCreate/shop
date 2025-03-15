@@ -71,25 +71,14 @@
     <script>
         let productsCache = []; // Кэш товаров
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                // Запрашиваем конфиг
-                const response = await fetch('/api/config');
-                if (!response.ok) throw new Error("Ошибка загрузки конфигурации");
-                const config = await response.json();
-    
-                // Проверяем доступ
-                if (!config.allowBrowser && !window.Telegram?.WebApp) {
-                    document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
-                    return;
-                }
-    
-                // Инициализация приложения
-                initializeApp();
-            } catch (error) {
-                console.error("Ошибка загрузки конфигурации:", error);
-                document.body.innerHTML = "<h1>Ошибка загрузки конфигурации</h1>";
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!window.Telegram?.WebApp) {
+                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+                return;
             }
+    
+            // Если Telegram WebApp, запускаем приложение
+            initializeApp();
         });
     
         function initializeApp() {
