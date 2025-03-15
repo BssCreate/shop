@@ -154,6 +154,27 @@
             fetchProducts();
         }
 
+        function startAnimation() {
+            const button = document.querySelector('.telegram-button');
+
+            // Добавляем класс с анимацией
+            button.classList.add('shine');
+            
+            // Повторяем анимацию через 5 секунд
+            setInterval(() => {
+                button.classList.remove('shine'); // Убираем анимацию
+                void button.offsetWidth; // Это необходимо для сброса анимации
+                button.classList.add('shine'); // Добавляем анимацию снова
+            }, 5000); // Повторяем каждые 5 секунд
+        }
+
+        // Анимация для кнопки
+        document.styleSheets[0].insertRule(`
+            .shine:before {
+                animation: bg-move 2s forwards; /* Увеличена скорость до 2 секунд */
+            }
+        `, 0);
+
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
