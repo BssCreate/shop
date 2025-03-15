@@ -55,21 +55,6 @@
     </style>
 </head>
 <body>
-    <script src="config.js"></script> <!-- Подключение конфигурации -->
-    <script>
-        
-        document.addEventListener("DOMContentLoaded", () => {
-            if (!window.CONFIG.allowBrowser && !window.Telegram?.WebApp) {
-                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
-                return;
-            }
-
-            const tg = window.Telegram?.WebApp;
-            if (tg) tg.expand();
-
-            fetchProducts(); // Загружаем товары при загрузке страницы
-        });
-    </script>
 
     <div class="container" id="content">
         <h1>Товары</h1>
@@ -85,36 +70,32 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let config = { allowBrowser: false }; // Значение по умолчанию
+        let productsCache = []; // Кэш товаров
 
-            async function loadConfig() {
-                try {
-                    const response = await fetch('/api/config'); // Vercel теперь поддерживает этот путь
-                    if (!response.ok) throw new Error("Ошибка загрузки конфигурации");
-                    config = await response.json();
-                    checkAccess();
-                } catch (error) {
-                    console.error("Не удалось загрузить config.json:", error);
-                    checkAccess(); // Используем значение по умолчанию
-                }
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config');
+                if (!response.ok) throw new Error("Ошибка загрузки конфигурации");
+                config = await response.json();
+            } catch (error) {
+                console.error("Не удалось загрузить config.json:", error);
             }
-        
-            function checkAccess() {
-                if (!config.allowBrowser && !window.Telegram?.WebApp) {
-                    document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
-                } else {
-                    initializeApp();
-                }
+            checkAccess();
+        }
+
+        function checkAccess() {
+            if (!config.allowBrowser && !window.Telegram?.WebApp) {
+                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+            } else {
+                initializeApp();
             }
-        
-            function initializeApp() {
-                const tg = window.Telegram?.WebApp;
-                if (tg) tg.expand();
-                fetchProducts();
-            }
-        
-            document.addEventListener("DOMContentLoaded", loadConfig);
-        
-        let productsCache = [];
+        }
+
+        function initializeApp() {
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
+            fetchProducts();
+        }
 
         function showContent(page) {
             const content = document.getElementById('content');
@@ -131,7 +112,7 @@
                 case 'products':
                     html = '<h1>Товары</h1><div id="product-list"></div>';
                     content.innerHTML = html;
-                    renderProducts(); // Рендерим загруженные товары
+                    renderProducts();
                     return;
                 case 'profile':
                     const tg = window.Telegram?.WebApp;
@@ -195,6 +176,8 @@
         function buyProduct() {
             alert("Функция покупки пока не реализована");
         }
+
+        document.addEventListener("DOMContentLoaded", loadConfig);
     </script>
 </body>
 </html>
