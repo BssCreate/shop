@@ -72,16 +72,21 @@
         let productsCache = []; // Кэш товаров
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Проверка, что WebApp доступен
-            if (typeof window.Telegram === "undefined" || !window.Telegram.WebApp) {
-                // Если Telegram WebApp не найден, показываем сообщение и блокируем страницу
+            // Проверяем userAgent на наличие Telegram
+            if (!isTelegramWebApp()) {
                 document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
                 return;
             }
-    
+
             // Если Telegram WebApp, запускаем приложение
             initializeApp();
         });
+
+        // Функция для проверки нахождения в Telegram WebApp
+        function isTelegramWebApp() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /Telegram/i.test(userAgent);
+        }
 
         function initializeApp() {
             const tg = window.Telegram?.WebApp;
