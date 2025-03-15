@@ -55,8 +55,22 @@
     </style>
 </head>
 <body>
+    <script src="config.js"></script> <!-- Подключение конфигурации -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!window.CONFIG.allowBrowser && !window.Telegram?.WebApp) {
+                document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+                return;
+            }
+
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
+
+            fetchProducts(); // Загружаем товары при загрузке страницы
+        });
+    </script>
+
     <div class="container" id="content">
-        <!-- Контент по умолчанию -->
         <h1>Товары</h1>
         <div id="product-list">Загрузка товаров...</div>
     </div>
@@ -69,17 +83,7 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tg = window.Telegram?.WebApp;
-
-            if (!tg) {
-                console.error("Ошибка: Telegram SDK не загружен!");
-                return;
-            }
-            
-            tg.expand();
-            fetchProducts();
-        });
+        let productsCache = [];
 
         function showContent(page) {
             const content = document.getElementById('content');
@@ -94,20 +98,18 @@
                     html = '<h1>Новости</h1><p>Последние новости здесь.</p>';
                     break;
                 case 'products':
-                    html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
-                    fetchProducts();
-                    break;
+                    html = '<h1>Товары</h1><div id="product-list"></div>';
+                    content.innerHTML = html;
+                    renderProducts(); // Рендерим загруженные товары
+                    return;
                 case 'profile':
                     const tg = window.Telegram?.WebApp;
                     const user = tg?.initDataUnsafe?.user;
-                    if (user) {
-                        html = `<h1>Профиль</h1>
-                                <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
-                                <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                <p><strong>ID:</strong> ${user.id}</p>`;
-                    } else {
-                        html = '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
-                    }
+                    html = user ? `<h1>Профиль</h1>
+                                   <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
+                                   <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
+                                   <p><strong>ID:</strong> ${user.id}</p>`
+                                : '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
                     break;
             }
             content.innerHTML = html;
@@ -117,27 +119,34 @@
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    const productList = document.getElementById('product-list');
-                    productList.innerHTML = '';
-                    products.forEach(product => {
-                        const discount = product.discount_price < product.price ? 
-                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
-                        const productElement = document.createElement('div');
-                        productElement.className = 'product';
-                        productElement.innerHTML = `
-                            <img src="${product.image}" alt="${product.title}" width="100">
-                            <h2>${product.title}</h2>
-                            <p>${product.description}</p>
-                            <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
-                        `;
-                        productElement.onclick = () => showProductDetails(product);
-                        productList.appendChild(productElement);
-                    });
+                    productsCache = products; // Кэшируем товары
+                    renderProducts();
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки товаров:', error);
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
+        }
+
+        function renderProducts() {
+            const productList = document.getElementById('product-list');
+            if (!productList) return;
+
+            productList.innerHTML = '';
+            productsCache.forEach(product => {
+                const discount = product.discount_price < product.price ? 
+                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}" width="100">
+                    <h2>${product.title}</h2>
+                    <p>${product.description}</p>
+                    <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                `;
+                productElement.onclick = () => showProductDetails(product);
+                productList.appendChild(productElement);
+            });
         }
 
         function showProductDetails(product) {
