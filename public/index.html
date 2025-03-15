@@ -54,7 +54,7 @@
         }
 
         .telegram-button {
-            background-color: #1c93e3; /* Новый цвет кнопки */
+            background-color: #1c93e3;
             color: white;
             border: none;
             padding: 13px 24px;
@@ -119,6 +119,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let productsLoaded = false; // Флаг, чтобы избежать повторной загрузки товаров
+        let productsData = []; // Переменная для хранения загруженных товаров
 
         document.addEventListener("DOMContentLoaded", () => {
             const tg = window.Telegram?.WebApp;
@@ -148,6 +149,8 @@
                     html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
                     if (!productsLoaded) { // Загружаем товары только если они еще не загружены
                         fetchProducts();
+                    } else {
+                        renderProducts(); // Показываем уже загруженные товары
                     }
                     break;
                 case 'profile':
@@ -167,33 +170,39 @@
         }
 
         function fetchProducts() {
-            if (productsLoaded) return; // Если товары уже загружены, ничего не делаем
+            if (productsLoaded) return; // Если товары уже были загружены, не загружаем их снова
 
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    const productList = document.getElementById('product-list');
-                    productList.innerHTML = '';
-                    products.forEach(product => {
-                        const discount = product.discount_price < product.price ? 
-                            `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
-                        const productElement = document.createElement('div');
-                        productElement.className = 'product';
-                        productElement.innerHTML = ` 
-                            <img src="${product.image}" alt="${product.title}" width="100">
-                            <h2>${product.title}</h2>
-                            <p>${product.description}</p>
-                            <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
-                        `;
-                        productElement.onclick = () => showProductDetails(product);
-                        productList.appendChild(productElement);
-                    });
+                    productsData = products; // Сохраняем товары в переменную
                     productsLoaded = true; // Устанавливаем флаг, что товары загружены
+                    renderProducts(); // Отображаем товары
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки товаров:', error);
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
+        }
+
+        function renderProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Очищаем список товаров
+
+            productsData.forEach(product => {
+                const discount = product.discount_price < product.price ? 
+                    `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}" width="100">
+                    <h2>${product.title}</h2>
+                    <p>${product.description}</p>
+                    <p><strong>Цена:</strong> ${product.discount_price} ₽ ${discount}</p>
+                `;
+                productElement.onclick = () => showProductDetails(product);
+                productList.appendChild(productElement);
+            });
         }
 
         function showProductDetails(product) {
