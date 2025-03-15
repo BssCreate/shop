@@ -237,20 +237,22 @@
             }
             tg.expand();
         
-            // Получаем хэш из URL
+            // Загружаем данные (но пока не меняем контент)
+            fetchProducts();
+            fetchReviews();
+        
+            // Проверяем, есть ли хэш в URL
             const hash = window.location.hash;
         
             if (hash === "#reviews") {
-                showContent('reviews'); // Открываем отзывы
+                setTimeout(() => showContent('reviews'), 100); // Даем время на загрузку
             } else if (hash === "#news") {
-                showContent('news'); // Открываем новости
+                setTimeout(() => showContent('news'), 100);
             } else {
-                showContent('products'); // По умолчанию товары
+                setTimeout(() => showContent('products'), 100); // По умолчанию товары
             }
-        
-            fetchProducts();
-            fetchReviews();
         });
+
 
 
         
