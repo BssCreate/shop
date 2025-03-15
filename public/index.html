@@ -127,7 +127,7 @@
             }
             
             tg.expand();
-            fetchProducts();
+            fetchProducts(); // Загрузка товаров при первом заходе на сайт
         });
 
         function showContent(page) {
@@ -144,7 +144,7 @@
                     break;
                 case 'products':
                     html = '<h1>Товары</h1><div id="product-list">Загрузка товаров...</div>';
-                    fetchProducts();
+                    // Загрузка товаров только при полной перезагрузке
                     break;
                 case 'profile':
                     const tg = window.Telegram?.WebApp;
@@ -173,7 +173,7 @@
                             `<span class="discount">-${Math.round((1 - product.discount_price / product.price) * 100)}%</span>` : '';
                         const productElement = document.createElement('div');
                         productElement.className = 'product';
-                        productElement.innerHTML = `
+                        productElement.innerHTML = ` 
                             <img src="${product.image}" alt="${product.title}" width="100">
                             <h2>${product.title}</h2>
                             <p>${product.description}</p>
@@ -200,24 +200,6 @@
                 <button onclick="showContent('products')">Назад</button>
             `;
         }
-
-        function startAnimation() {
-            const button = document.querySelector('.telegram-button');
-            button.classList.add('shine');
-
-            setInterval(() => {
-                button.classList.remove('shine'); // Убираем анимацию
-                void button.offsetWidth; // Это необходимо для сброса анимации
-                button.classList.add('shine'); // Добавляем анимацию снова
-            }, 5000); // Повторяем каждые 5 секунд
-        }
-
-        // Анимация для кнопки
-        document.styleSheets[0].insertRule(`
-            .shine:before {
-                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
-            }
-        `, 0);
 
         function buyProduct() {
             alert("Функция покупки пока не реализована");
