@@ -69,15 +69,12 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let productsCache = []; // Кэш товаров
-
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.Telegram?.WebApp) {
                 document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
                 return;
             }
-    
-            // Если Telegram WebApp, запускаем приложение
+        
             initializeApp();
         });
     
@@ -86,7 +83,7 @@
             if (tg) tg.expand();
             fetchProducts();
         }
-        
+    
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
@@ -105,8 +102,7 @@
                     renderProducts();
                     return;
                 case 'profile':
-                    const tg = window.Telegram?.WebApp;
-                    const user = tg?.initDataUnsafe?.user;
+                    const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
                     html = user ? `<h1>Профиль</h1>
                                    <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
                                    <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
@@ -116,12 +112,12 @@
             }
             content.innerHTML = html;
         }
-
+    
         function fetchProducts() {
             fetch('/items.json')
                 .then(response => response.json())
                 .then(products => {
-                    productsCache = products; // Кэшируем товары
+                    productsCache = products;
                     renderProducts();
                 })
                 .catch(error => {
@@ -129,11 +125,11 @@
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
         }
-
+    
         function renderProducts() {
             const productList = document.getElementById('product-list');
             if (!productList) return;
-
+    
             productList.innerHTML = '';
             productsCache.forEach(product => {
                 const discount = product.discount_price < product.price ? 
@@ -150,7 +146,7 @@
                 productList.appendChild(productElement);
             });
         }
-
+    
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
                 <h1>${product.title}</h1>
@@ -162,12 +158,11 @@
                 <button onclick="showContent('products')">Назад</button>
             `;
         }
-
+    
         function buyProduct() {
             alert("Функция покупки пока не реализована");
         }
-
-        document.addEventListener("DOMContentLoaded", loadConfig);
     </script>
+
 </body>
 </html>
