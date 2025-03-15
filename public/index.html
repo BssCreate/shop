@@ -57,6 +57,7 @@
 <body>
     <script src="config.js"></script> <!-- Подключение конфигурации -->
     <script>
+        
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.CONFIG.allowBrowser && !window.Telegram?.WebApp) {
                 document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
@@ -83,6 +84,36 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        let config = { allowBrowser: false }; // Значение по умолчанию
+
+            async function loadConfig() {
+                try {
+                    const response = await fetch('/api/config'); // Запрос к серверу
+                    if (!response.ok) throw new Error("Ошибка загрузки конфигурации");
+                    config = await response.json();
+                    checkAccess();
+                } catch (error) {
+                    console.error("Не удалось загрузить config.json:", error);
+                    checkAccess(); // Используем значение по умолчанию
+                }
+            }
+        
+            function checkAccess() {
+                if (!config.allowBrowser && !window.Telegram?.WebApp) {
+                    document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
+                } else {
+                    initializeApp();
+                }
+            }
+        
+            function initializeApp() {
+                const tg = window.Telegram?.WebApp;
+                if (tg) tg.expand();
+                fetchProducts();
+            }
+        
+            document.addEventListener("DOMContentLoaded", loadConfig);
+        
         let productsCache = [];
 
         function showContent(page) {
