@@ -237,17 +237,21 @@
             }
             tg.expand();
         
-            // Загружаем данные, но не переключаем контент сразу
+            let contentSet = false; // Переменная для предотвращения двойного вызова
+        
             fetchProducts();
             fetchReviews();
         
-            // Проверяем хэш в URL один раз, затем ничего не перезаписываем
             if (window.location.hash) {
-                showContent(window.location.hash.substring(1)); // Убираем #
-            } else {
-                showContent('products'); // Только если хэша нет
+                showContent(window.location.hash.substring(1));
+                contentSet = true;
+            }
+        
+            if (!contentSet) {
+                showContent('products');
             }
         });
+
         
 
 
