@@ -237,23 +237,18 @@
             }
             tg.expand();
         
-            // Загружаем данные, но не меняем контент
+            // Загружаем данные, но не переключаем контент сразу
             fetchProducts();
             fetchReviews();
         
-            // Проверяем хэш в URL и сразу отображаем нужный раздел
-            switch (window.location.hash) {
-                case "#reviews":
-                    showContent('reviews');
-                    break;
-                case "#news":
-                    showContent('news');
-                    break;
-                default:
-                    showContent('products'); // Только если нет хэша
-                    break;
+            // Проверяем хэш в URL один раз, затем ничего не перезаписываем
+            if (window.location.hash) {
+                showContent(window.location.hash.substring(1)); // Убираем #
+            } else {
+                showContent('products'); // Только если хэша нет
             }
         });
+        
 
 
 
