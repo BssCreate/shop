@@ -130,12 +130,6 @@
 </head>
 <body>
 
-    <div id="open-webapp-container" style="display: none;">
-        <h1>Откройте сайт в Telegram WebApp</h1>
-        <button onclick="openWebApp()">Открыть</button>
-    </div>
-
-
     <div class="message-container">
         <h1>Ошибка!</h1>
         <p>Сайт доступен только с Telegram</p>
@@ -162,29 +156,15 @@
 
         // Функция для проверки нахождения в Telegram WebApp
         function isTelegramWebApp() {
-            return typeof window.Telegram !== "undefined" && typeof window.Telegram.WebApp !== "undefined";
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /Telegram/i.test(userAgent);
         }
-
 
         function initializeApp() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
             fetchProducts();
         }
-
-        function openWebApp() {
-            window.location.href = "https://t.me/JuniPit"; // Замени на свою ссылку на бота
-        }
-        
-        document.addEventListener("DOMContentLoaded", () => {
-            if (!isTelegramWebApp()) {
-                document.getElementById("open-webapp-container").style.display = "block";
-            } else {
-                document.querySelector('.message-container').style.display = 'none';
-                initializeApp();
-            }
-        });
-
 
         function startAnimation() {
             const button = document.querySelector('.telegram-button');
