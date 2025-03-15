@@ -106,7 +106,6 @@
             height: 100%;
             background-image: linear-gradient(270deg, rgba(100, 181, 239, 0) 48.44%, #64b5ef 75.52%, rgba(100, 181, 239, 0) 100%);
             background-repeat: no-repeat;
-            animation: bg-move 2s forwards; /* Увеличена скорость до 2 секунд */
         }
 
         @keyframes bg-move {
@@ -159,7 +158,7 @@
 
             // Добавляем класс с анимацией
             button.classList.add('shine');
-            
+
             // Повторяем анимацию через 5 секунд
             setInterval(() => {
                 button.classList.remove('shine'); // Убираем анимацию
@@ -171,7 +170,7 @@
         // Анимация для кнопки
         document.styleSheets[0].insertRule(`
             .shine:before {
-                animation: bg-move 2s forwards; /* Увеличена скорость до 2 секунд */
+                animation: bg-move 1s forwards; /* Уменьшена скорость до 1 секунды */
             }
         `, 0);
 
