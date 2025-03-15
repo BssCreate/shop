@@ -69,21 +69,26 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        let productsCache = []; // Кэш товаров
+
         document.addEventListener("DOMContentLoaded", () => {
-            if (!window.Telegram?.WebApp) {
+            // Проверка, что WebApp доступен
+            if (typeof window.Telegram === "undefined" || !window.Telegram.WebApp) {
+                // Если Telegram WebApp не найден, показываем сообщение и блокируем страницу
                 document.body.innerHTML = "<h1>Открывайте сайт только через Telegram</h1>";
                 return;
             }
-        
+    
+            // Если Telegram WebApp, запускаем приложение
             initializeApp();
         });
-    
+
         function initializeApp() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
             fetchProducts();
         }
-    
+
         function showContent(page) {
             const content = document.getElementById('content');
             const buttons = document.querySelectorAll('.bottom-nav button');
@@ -112,7 +117,7 @@
             }
             content.innerHTML = html;
         }
-    
+
         function fetchProducts() {
             fetch('/items.json')
                 .then(response => response.json())
@@ -125,11 +130,11 @@
                     document.getElementById('product-list').innerHTML = 'Ошибка загрузки товаров';
                 });
         }
-    
+
         function renderProducts() {
             const productList = document.getElementById('product-list');
             if (!productList) return;
-    
+
             productList.innerHTML = '';
             productsCache.forEach(product => {
                 const discount = product.discount_price < product.price ? 
@@ -146,7 +151,7 @@
                 productList.appendChild(productElement);
             });
         }
-    
+
         function showProductDetails(product) {
             document.getElementById('content').innerHTML = `
                 <h1>${product.title}</h1>
@@ -158,11 +163,10 @@
                 <button onclick="showContent('products')">Назад</button>
             `;
         }
-    
+
         function buyProduct() {
             alert("Функция покупки пока не реализована");
         }
     </script>
-
 </body>
 </html>
