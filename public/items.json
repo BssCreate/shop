@@ -1,23 +1,37 @@
 [
     {
         "image": "/shop_offer/Brawl_Stars_Price.jpg",
-        "title": "Прайс-Лист Brawl Stars",
-        "description": "Прайс-Лист для кристаллов, Brawl Pass и Pro Pass.",
+        "title": "Прайс-Лист Brawl Stars (NEW)",
+        "description": "Прайс-Лист для Кристаллов, Brawl Pass, Brawl Pass Plus и Pro Pass.",
         "price": 60,
-        "discount_price": 40
+        "discount_price": 30
     },
     {
-        "image": "/shop_offer/Brawl_Stars_Price.jpg",
-        "title": "Ноутбук ProBook",
-        "description": "Игровой ноутбук с RTX 4060 и SSD 1TB.",
-        "price": 120000,
-        "discount_price": 115000
+        "image": "/shop_offer/Brawl_Stars_Title.jpg",
+        "title": "Титул",
+        "description": "Картинка вашего желаемого титула с вашим текстом и цветовым вариантом.",
+        "price": 30,
+        "discount_price": 15
     },
     {
-        "image": "/shop_offer/Brawl_Stars_Price.jpg",
-        "title": "Наушники BassBoost",
-        "description": "Беспроводные наушники с шумоподавлением.",
-        "price": 10000,
-        "discount_price": 10000
+        "image": "/shop_offer/Brawl_Stars_contest.jpg",
+        "title": "Пост-Картинка Конкурс",
+        "description": "Всё делается на ваш вкус, хоть это будет акция, хоть это будет иконка, пин, спрей, любая (по возможности) крео по вашему запросу.",
+        "price": "Договорная",
+        "discount_price": "Договорная"
+    },
+    {
+        "image": "/shop_offer/Brawl_Stars_Kreo.jpg",
+        "title": "Крео (Медиа для байта)",
+        "description": "Всё делается на ваш вкус, хоть это будет акция, хоть это будет иконка, пин, спрей, любая (по возможности) крео по вашему запросу.",
+        "price": "Договорная",
+        "discount_price": "Договорная"
+    },
+    {
+        "image": "/shop_offer/Brawl_Stars_Price_2.jpg",
+        "title": "Прайс-Лист буста трофейного ящика",
+        "description": "Всё делается на ваш вкус, хоть это будет акция, хоть это будет иконка, пин, спрей, любая (по возможности) крео по вашему запросу.",
+        "price": 60,
+        "discount_price": 30
     }
 ]
