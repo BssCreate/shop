@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram WebApp</title>
+    <title>JuniPit Shop</title>
     <style>
         body {
             margin: 0;
@@ -143,28 +143,28 @@
     <script>
         let productsCache = []; // Кэш товаров
 
-        document.addEventListener("DOMContentLoaded", () => {
-            // Проверяем userAgent на наличие Telegram
-            if (!isTelegramWebApp()) {
-                document.body.innerHTML = document.body.innerHTML; // Показываем ошибку
-                return;
-            }
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     // Проверяем userAgent на наличие Telegram
+        //     if (!isTelegramWebApp()) {
+        //         document.body.innerHTML = document.body.innerHTML; // Показываем ошибку
+        //         return;
+        //     }
 
-            // Если Telegram WebApp, запускаем приложение
-            initializeApp();
-        });
+        //     // Если Telegram WebApp, запускаем приложение
+        //     initializeApp();
+        // });
 
-        // Функция для проверки нахождения в Telegram WebApp
-        function isTelegramWebApp() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return /Telegram/i.test(userAgent);
-        }
+        // // Функция для проверки нахождения в Telegram WebApp
+        // function isTelegramWebApp() {
+        //     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        //     return /Telegram/i.test(userAgent);
+        // }
 
-        function initializeApp() {
-            const tg = window.Telegram?.WebApp;
-            if (tg) tg.expand();
-            fetchProducts();
-        }
+        // function initializeApp() {
+        //     const tg = window.Telegram?.WebApp;
+        //     if (tg) tg.expand();
+        //     fetchProducts();
+        // }
 
         function startAnimation() {
             const button = document.querySelector('.telegram-button');
