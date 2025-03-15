@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JuniPit Shop</title>
     <style>
+        /* Твой стиль остаётся без изменений */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -130,49 +131,25 @@
 </head>
 <body>
 
-<!--     <div class="message-container">
-        <h1>Ошибка!</h1>
-        <p>Сайт доступен только с Telegram</p>
-        <a href="https://t.me/JuniPit" class="telegram-button" target="_blank">
-            <span>Перейти в Telegram</span>
-        </a>
-
-    </div> -->
+    <!-- Оставляем только контент страницы -->
+    <div class="container">
+        <h1>Добро пожаловать в JuniPit Shop!</h1>
+        <p>Вы можете просматривать товары и заказывать их.</p>
+        <div class="bottom-nav">
+            <button id="btn-products" onclick="showContent('products')" class="active">Товары</button>
+            <button id="btn-news" onclick="showContent('news')">Новости</button>
+            <button id="btn-profile" onclick="showContent('profile')">Профиль</button>
+        </div>
+    </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let productsCache = []; // Кэш товаров
 
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     // Проверяем userAgent на наличие Telegram
-        //     if (!isTelegramWebApp()) {
-        //         document.body.innerHTML = document.body.innerHTML; // Показываем ошибку
-        //         return;
-        //     }
-
-        //     // Если Telegram WebApp, запускаем приложение
-        //     initializeApp();
-        // });
-
-        // // Функция для проверки нахождения в Telegram WebApp
-        // function isTelegramWebApp() {
-        //     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        //     return /Telegram/i.test(userAgent);
-        // }
-
-        // function initializeApp() {
-        //     const tg = window.Telegram?.WebApp;
-        //     if (tg) tg.expand();
-        //     fetchProducts();
-        // }
-
         function startAnimation() {
             const button = document.querySelector('.telegram-button');
-
-            // Добавляем класс с анимацией
             button.classList.add('shine');
 
-            // Повторяем анимацию через 5 секунд
             setInterval(() => {
                 button.classList.remove('shine'); // Убираем анимацию
                 void button.offsetWidth; // Это необходимо для сброса анимации
@@ -209,8 +186,8 @@
                     html = user ? `<h1>Профиль</h1>
                                    <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
                                    <p><strong>Username:</strong> @${user.username || 'Нет'}</p>
-                                   <p><strong>ID:</strong> ${user.id}</p>`
-                                : '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
+                                   <p><strong>ID:</strong> ${user.id}</p>` : 
+                                   '<h1>Профиль</h1><p>Ошибка: данные пользователя не получены.</p>';
                     break;
             }
             content.innerHTML = html;
